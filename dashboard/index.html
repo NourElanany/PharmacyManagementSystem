@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaCare Pro - Pharmacy Management System</title>
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #ecfdf5;
+      --secondary: #3b82f6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --dark: #0f172a;
+      --gray-light: #f8fafc;
+      --gray-border: #e2e8f0;
+      --text-muted: #64748b;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: #1e293b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 20px 12px;
+      flex: 1;
+    }
+
+    .nav-item {
+      margin-bottom: 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #fff;
+      background: rgba(16, 185, 129, 0.15);
+      border-left: 4px solid var(--primary);
+    }
+
+    .user-profile {
+      padding: 16px 20px;
+      border-top: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .top-navbar {
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .role-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .content-container {
+      padding: 32px;
+      flex: 1;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--gray-border);
+    }
+
+    .stat-info h4 {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-info .num {
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    /* View Windows */
+    .view-window {
+      display: none;
+    }
+
+    .view-window.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards & Tables */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box {
+      padding: 8px 16px;
+      border: 1px solid var(--gray-border);
+      border-radius: 6px;
+      width: 280px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline { background: #fff; border: 1px solid var(--gray-border); color: var(--dark); }
+
+    /* POS Screen */
+    .pos-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    .cart-box {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--gray-border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      height: 580px;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      margin: 16px 0;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .cart-summary {
+      border-top: 2px dashed var(--gray-border);
+      padding-top: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .summary-row.total {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-top: 10px;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 540px;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-border);
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-icon">💊</div>
+      <div>
+        <div class="brand-title">PharmaCare Pro</div>
+        <div style="font-size: 11px; color: #94a3b8;">v2.0 Enterprise</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li class="nav-item">
+        <a class="nav-link active" id="nav-dashboard" onclick="switchWindow('dashboard')">
+          <span>📊</span> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-inventory" onclick="switchWindow('inventory')">
+          <span>📦</span> Medicines & Inventory
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-pos" onclick="switchWindow('pos')">
+          <span>🧾</span> POS & Billing
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-alerts" onclick="switchWindow('alerts')">
+          <span>⚠️</span> Safety & Expiry Alerts
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-staff" onclick="switchWindow('staff')">
+          <span>👥</span> Staff Management
+        </a>
+      </li>
+    </ul>
+
+    <div class="user-profile">
+      <div class="avatar" id="currentAvatar">N</div>
+      <div>
+        <div style="font-size: 13px; font-weight: 600;" id="currentUserName">Dr. Nour</div>
+        <div style="font-size: 11px; color: #94a3b8;" id="currentUserRole">Head Administrator</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <main class="main-wrapper">
+    <header class="top-navbar">
+      <div class="page-title" id="pageTitle">Dashboard Overview</div>
+      <div class="top-actions">
+        <span class="role-badge" id="roleBadge">Role: Head Administrator</span>
+        <button class="btn btn-outline" onclick="toggleRole()">Switch Role</button>
+      </div>
+    </header>
+
+    <div class="content-container">
+
+      <!-- WINDOW 1: DASHBOARD -->
+      <section id="win-dashboard" class="view-window active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Today's Sales</h4>
+              <div class="num">$3,450.00</div>
+              <small style="color: #10b981; font-weight: 600;">↑ +14.2% from yesterday</small>
+            </div>
+            <div class="stat-icon" style="background: #ecfdf5; color: #059669;">💰</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Active Medicines</h4>
+              <div class="num" id="stat-total-meds">128</div>
+              <small style="color: #64748b;">4 Categories registered</small>
+            </div>
+            <div class="stat-icon" style="background: #eff6ff; color: #2563eb;">💊</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Low Stock Items</h4>
+              <div class="num" style="color: #f59e0b;" id="stat-low-stock">3</div>
+              <small style="color: #d97706; font-weight: 600;">Re-order required</small>
+            </div>
+            <div class="stat-icon" style="background: #fef3c7; color: #d97706;">⚠️</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Expiring Soon (30d)</h4>
+              <div class="num" style="color: #ef4444;" id="stat-expired">2</div>
+              <small style="color: #dc2626; font-weight: 600;">Action needed</small>
+            </div>
+            <div class="stat-icon" style="background: #fee2e2; color: #dc2626;">⏳</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 style="font-size: 16px;">Recent Transactions (Invoices)</h3>
+            <button class="btn btn-outline" onclick="switchWindow('pos')">+ New Sale</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Invoice ID</th>
+                  <th>Customer</th>
+                  <th>Items Sold</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Cashier</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-sales">
+                <tr>
+                  <td><strong>INV-20261014-9841</strong></td>
+                  <td>Mohamed Ali</td>
+                  <td>2 items (Panadol Extra, Vitamin C)</td>
+                  <td><strong>$80.00</strong></td>
+                  <td><span class="badge badge-info">CASH</span></td>
+                  <td>Sara Cashier</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+                <tr>
+                  <td><strong>INV-20261014-7712</strong></td>
+                  <td>Hassan Ibrahim</td>
+                  <td>1 item (Augmentin 1g)</td>
+                  <td><strong>$105.00</strong></td>
+                  <td><span class="badge badge-info">VISA</span></td>
+                  <td>Ahmed Pharmacist</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+                <tr>
+                  <td><strong>INV-20261014-6510</strong></td>
+                  <td>Tarek Mostafa</td>
+                  <td>3 items (Concor, Omega 3, Panadol)</td>
+                  <td><strong>$187.50</strong></td>
+                  <td><span class="badge badge-info">CASH</span></td>
+                  <td>Sara Cashier</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 2: MEDICINES & INVENTORY -->
+      <section id="win-inventory" class="view-window">
+        <div class="card">
+          <div class="card-header">
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <input type="text" id="medSearchInput" class="search-box" placeholder="🔍 Search trade or generic name..." oninput="filterMedicines()">
+              <select id="categoryFilter" onchange="filterMedicines()" style="padding: 8px 12px; border: 1px solid var(--gray-border); border-radius: 6px; font-size: 14px;">
+                <option value="ALL">All Categories</option>
+                <option value="Analgesics">Analgesics & Pain</option>
+                <option value="Antibiotics">Antibiotics</option>
+                <option value="Vitamins">Vitamins & Supplements</option>
+                <option value="Chronic">Chronic Diseases</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openAddMedicineModal()">+ Add New Medicine</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Trade Name</th>
+                  <th>Generic Formula</th>
+                  <th>Category</th>
+                  <th>Batch No</th>
+                  <th>Buy Price</th>
+                  <th>Sell Price</th>
+                  <th>Stock</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 3: POS & INVOICING -->
+      <section id="win-pos" class="view-window">
+        <div class="pos-grid">
+          <div class="card" style="height: 580px; display: flex; flex-direction: column;">
+            <div class="card-header">
+              <input type="text" id="posSearchInput" class="search-box" placeholder="🔍 Scan barcode or search medication..." oninput="filterPosMedicines()">
+              <span style="font-size: 13px; color: var(--text-muted);">Click (+) to add to invoice</span>
+            </div>
+            <div class="table-responsive" style="flex: 1;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Available Stock</th>
+                    <th>Expiry</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="posProductTable">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Invoice Cart Box -->
+          <div class="cart-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 16px;">Current Invoice</h3>
+              <span class="badge badge-info" id="posInvoiceNo">INV-20261014-NEW</span>
+            </div>
+            <div style="margin-top: 12px;">
+              <input type="text" id="customerNameInput" class="search-box" style="width: 100%;" placeholder="Customer Name (e.g. Walk-in)">
+            </div>
+            <div class="cart-items" id="cartItemsList">
+              <div style="text-align: center; color: var(--text-muted); margin-top: 60px;">
+                🛒 Cart is empty.<br>Add medicines from the left list.
+              </div>
+            </div>
+            <div class="cart-summary">
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="posSubtotal">$0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Discount:</span>
+                <input type="number" id="posDiscountInput" value="0" min="0" max="100" style="width: 60px; text-align: right;" onchange="updateCartTotals()">
+              </div>
+              <div class="summary-row total">
+                <span>Net Total:</span>
+                <span id="posTotal">$0.00</span>
+              </div>
+              <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 14px; padding: 12px;" onclick="checkoutSale()">
+                💳 Complete Checkout & Print Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 4: ALERTS WINDOW -->
+      <section id="win-alerts" class="view-window">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="card">
+            <div class="card-header" style="background: #fef2f2; border-bottom: 2px solid #ef4444;">
+              <h3 style="font-size: 16px; color: #b91c1c;">⚠️ Expiry Date Warning Center</h3>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Medicine</th>
+                    <th>Batch</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="expiryAlertsTable">
+                  <!-- Populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header" style="background: #fffbeb; border-bottom: 2px solid #f59e0b;">
+              <h3 style="font-size: 16px; color: #b45309;">📦 Low Stock Re-order Alerts</h3>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Medicine</th>
+                    <th>Current Stock</th>
+                    <th>Min Safety Alert</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="lowStockAlertsTable">
+                  <!-- Populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 5: STAFF MANAGEMENT -->
+      <section id="win-staff" class="view-window">
+        <div class="card">
+          <div class="card-header">
+            <h3 style="font-size: 16px;">Pharmacy Staff & Role Control</h3>
+            <button class="btn btn-primary" onclick="alert('Opening Staff Registration Dialog')">+ Register New Staff</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Staff Member</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Assigned Role</th>
+                  <th>Account Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Dr. Nour</strong></td>
+                  <td>nour_admin</td>
+                  <td>nour@pharmacy.com</td>
+                  <td>01012345678</td>
+                  <td><span class="badge badge-success">ADMIN</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;">Edit</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Ahmed El-Sayed</strong></td>
+                  <td>ahmed_ph</td>
+                  <td>ahmed@pharmacy.com</td>
+                  <td>01123456789</td>
+                  <td><span class="badge badge-info">PHARMACIST</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;">Edit</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Sara Mahmoud</strong></td>
+                  <td>sara_cashier</td>
+                  <td>sara@pharmacy.com</td>
+                  <td>01234567890</td>
+                  <td><span class="badge badge-warning">CASHIER</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;">Edit</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ADD MEDICINE MODAL -->
+  <div class="modal-overlay" id="addMedModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 16px; font-size: 18px;">Add New Pharmaceutical Item</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Trade Name</label>
+          <input type="text" id="newTradeName" placeholder="e.g. Brufen 400mg">
+        </div>
+        <div class="form-group">
+          <label>Generic Formula</label>
+          <input type="text" id="newGenericName" placeholder="e.g. Ibuprofen">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="newCategory">
+            <option value="Analgesics">Analgesics & Pain</option>
+            <option value="Antibiotics">Antibiotics</option>
+            <option value="Vitamins">Vitamins & Supplements</option>
+            <option value="Chronic">Chronic Diseases</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Batch Number</label>
+          <input type="text" id="newBatch" placeholder="BAT-2024-XXX">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Purchase Price ($)</label>
+          <input type="number" id="newBuyPrice" step="0.5" value="20.00">
+        </div>
+        <div class="form-group">
+          <label>Selling Price ($)</label>
+          <input type="number" id="newSellPrice" step="0.5" value="30.00">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Initial Stock Quantity</label>
+          <input type="number" id="newStock" value="50">
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="newExpiry" value="2027-06-30">
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+        <button class="btn btn-outline" onclick="closeAddMedicineModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveNewMedicine()">Save Medicine</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // In-memory data store for live functionality
+    let medicines = [
+      { id: 1, name: "Panadol Extra", generic: "Paracetamol + Caffeine", category: "Analgesics", batch: "BAT-2024-001", buy: 35.00, sell: 45.00, stock: 120, minStock: 15, expiry: "2027-10-31" },
+      { id: 2, name: "Augmentin 1g", generic: "Amoxicillin + Clavulanic", category: "Antibiotics", batch: "BAT-2024-002", buy: 85.00, sell: 105.00, stock: 42, minStock: 10, expiry: "2026-12-31" },
+      { id: 3, name: "Vitamin C 1000mg", generic: "Ascorbic Acid", category: "Vitamins", batch: "BAT-2024-003", buy: 25.00, sell: 35.00, stock: 7, minStock: 10, expiry: "2026-11-20" },
+      { id: 4, name: "Concor 5mg", generic: "Bisoprolol Fumarate", category: "Chronic", batch: "BAT-2024-004", buy: 40.00, sell: 52.50, stock: 65, minStock: 10, expiry: "2026-10-28" },
+      { id: 5, name: "Cataflam 50mg", generic: "Diclofenac Potassium", category: "Analgesics", batch: "BAT-2024-005", buy: 28.00, sell: 38.00, stock: 4, minStock: 10, expiry: "2027-04-15" }
+    ];
+
+    let cart = [];
+    const roles = ["Head Administrator", "Licensed Pharmacist", "Cashier"];
+    let currentRoleIdx = 0;
+
+    function renderInventory() {
+      const tbody = document.getElementById("inventoryTableBody");
+      tbody.innerHTML = "";
+      medicines.forEach(m => {
+        const isLow = m.stock <= m.minStock;
+        const isExpiringSoon = new Date(m.expiry) <= new Date("2026-11-15");
+        
+        let statusBadge = `<span class="badge badge-success">In Stock</span>`;
+        if (isExpiringSoon) {
+          statusBadge = `<span class="badge badge-danger">Expiring Soon</span>`;
+        } else if (isLow) {
+          statusBadge = `<span class="badge badge-warning">Low Stock</span>`;
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${m.name}</strong></td>
+            <td>${m.generic}</td>
+            <td><span class="badge badge-info">${m.category}</span></td>
+            <td><code>${m.batch}</code></td>
+            <td>$${m.buy.toFixed(2)}</td>
+            <td><strong>$${m.sell.toFixed(2)}</strong></td>
+            <td><strong style="color: ${isLow ? '#f59e0b' : '#10b981'}">${m.stock} units</strong></td>
+            <td>${m.expiry}</td>
+            <td>${statusBadge}</td>
+            <td>
+              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;" onclick="restockMedicine(${m.id})">+ Stock</button>
+            </td>
+          </tr>
+        `;
+      });
+      renderPosProducts();
+      renderAlerts();
+    }
+
+    function renderPosProducts() {
+      const tbody = document.getElementById("posProductTable");
+      tbody.innerHTML = "";
+      medicines.forEach(m => {
+        tbody.innerHTML += `
+          <tr>
+            <td>
+              <strong>${m.name}</strong><br>
+              <small style="color: var(--text-muted);">${m.category}</small>
+            </td>
+            <td><strong>$${m.sell.toFixed(2)}</strong></td>
+            <td>${m.stock} in stock</td>
+            <td><small>${m.expiry}</small></td>
+            <td>
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;" onclick="addToCart(${m.id})">Add +</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderAlerts() {
+      const expBody = document.getElementById("expiryAlertsTable");
+      const lowBody = document.getElementById("lowStockAlertsTable");
+      expBody.innerHTML = "";
+      lowBody.innerHTML = "";
+
+      let expCount = 0;
+      let lowCount = 0;
+
+      medicines.forEach(m => {
+        if (new Date(m.expiry) <= new Date("2026-11-15")) {
+          expCount++;
+          expBody.innerHTML += `
+            <tr>
+              <td><strong>${m.name}</strong></td>
+              <td><code>${m.batch}</code></td>
+              <td><span style="color: #ef4444; font-weight: bold;">${m.expiry}</span></td>
+              <td><span class="badge badge-danger">Urgent Return</span></td>
+            </tr>
+          `;
+        }
+        if (m.stock <= m.minStock) {
+          lowCount++;
+          lowBody.innerHTML += `
+            <tr>
+              <td><strong>${m.name}</strong></td>
+              <td><strong style="color: #f59e0b;">${m.stock}</strong></td>
+              <td>${m.minStock}</td>
+              <td><button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="restockMedicine(${m.id})">Order +50</button></td>
+            </tr>
+          `;
+        }
+      });
+
+      document.getElementById("stat-expired").innerText = expCount;
+      document.getElementById("stat-low-stock").innerText = lowCount;
+      document.getElementById("stat-total-meds").innerText = medicines.length;
+    }
+
+    function switchWindow(name) {
+      document.querySelectorAll(".view-window").forEach(w => w.classList.remove("active"));
+      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+
+      document.getElementById("win-" + name).classList.add("active");
+      document.getElementById("nav-" + name).classList.add("active");
+
+      const titles = {
+        dashboard: "Dashboard Overview",
+        inventory: "Medicines & Inventory Management",
+        pos: "Point of Sale (POS) & Invoicing",
+        alerts: "Safety, Expiry & Inventory Alerts",
+        staff: "Staff Management & Role Access"
+      };
+      document.getElementById("pageTitle").innerText = titles[name];
+    }
+
+    function toggleRole() {
+      currentRoleIdx = (currentRoleIdx + 1) % roles.length;
+      const role = roles[currentRoleIdx];
+      document.getElementById("roleBadge").innerText = "Role: " + role;
+      document.getElementById("currentUserRole").innerText = role;
+    }
+
+    function addToCart(medId) {
+      const med = medicines.find(m => m.id === medId);
+      if (med.stock <= 0) {
+        alert("Stock exhausted for " + med.name);
+        return;
+      }
+      const existing = cart.find(c => c.id === medId);
+      if (existing) {
+        if (existing.qty + 1 > med.stock) {
+          alert("Cannot exceed available stock (" + med.stock + ")");
+          return;
+        }
+        existing.qty++;
+      } else {
+        cart.push({ id: med.id, name: med.name, price: med.sell, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      const container = document.getElementById("cartItemsList");
+      if (cart.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 60px;">🛒 Cart is empty.</div>`;
+        updateCartTotals();
+        return;
+      }
+      container.innerHTML = "";
+      cart.forEach(item => {
+        container.innerHTML += `
+          <div class="cart-item">
+            <div>
+              <strong>${item.name}</strong><br>
+              <small>$${item.price.toFixed(2)} × ${item.qty}</small>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <strong>$${(item.price * item.qty).toFixed(2)}</strong>
+              <button class="btn btn-outline" style="padding: 2px 6px;" onclick="removeFromCart(${item.id})">✕</button>
+            </div>
+          </div>
+        `;
+      });
+      updateCartTotals();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      renderCart();
+    }
+
+    function updateCartTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discount = parseFloat(document.getElementById("posDiscountInput").value) || 0;
+      const total = Math.max(0, subtotal - discount);
+
+      document.getElementById("posSubtotal").innerText = "$" + subtotal.toFixed(2);
+      document.getElementById("posTotal").innerText = "$" + total.toFixed(2);
+    }
+
+    function checkoutSale() {
+      if (cart.length === 0) {
+        alert("Please add items to cart first.");
+        return;
+      }
+      // Deduct stock
+      cart.forEach(item => {
+        const med = medicines.find(m => m.id === item.id);
+        if (med) med.stock -= item.qty;
+      });
+
+      const invNo = "INV-" + new Date().toISOString().slice(0,10).replace(/-/g,"") + "-" + Math.floor(1000 + Math.random() * 9000);
+      alert("✅ Sale Completed Successfully!\nInvoice Generated: " + invNo + "\nInventory updated automatically.");
+      
+      cart = [];
+      renderCart();
+      renderInventory();
+    }
+
+    function restockMedicine(id) {
+      const med = medicines.find(m => m.id === id);
+      if (med) {
+        med.stock += 50;
+        renderInventory();
+        alert("Restocked +50 units of " + med.name);
+      }
+    }
+
+    function openAddMedicineModal() {
+      document.getElementById("addMedModal").classList.add("active");
+    }
+
+    function closeAddMedicineModal() {
+      document.getElementById("addMedModal").classList.remove("active");
+    }
+
+    function saveNewMedicine() {
+      const name = document.getElementById("newTradeName").value;
+      const generic = document.getElementById("newGenericName").value;
+      const category = document.getElementById("newCategory").value;
+      const batch = document.getElementById("newBatch").value || "BAT-2024-NEW";
+      const buy = parseFloat(document.getElementById("newBuyPrice").value) || 10;
+      const sell = parseFloat(document.getElementById("newSellPrice").value) || 15;
+      const stock = parseInt(document.getElementById("newStock").value) || 20;
+      const expiry = document.getElementById("newExpiry").value || "2027-12-31";
+
+      if (!name) {
+        alert("Please specify medicine name.");
+        return;
+      }
+
+      medicines.unshift({
+        id: Date.now(),
+        name, generic, category, batch, buy, sell, stock, minStock: 10, expiry
+      });
+
+      closeAddMedicineModal();
+      renderInventory();
+      alert("✅ Medicine " + name + " registered successfully into inventory!");
+    }
+
+    // Initial render
+    renderInventory();
+  </script>
+</body>
+</html>

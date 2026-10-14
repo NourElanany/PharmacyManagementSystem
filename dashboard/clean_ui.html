@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaCare Pro • Modern Pharmacy Management System</title>
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-light: #ecfdf5;
+      --primary-border: #a7f3d0;
+      --secondary: #0284c7;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --dark: #0f172a;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Premium Navigation Header */
+    .top-header {
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Floating Tab Navigation */
+    .nav-tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 5px;
+      border-radius: 14px;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .tab-btn {
+      padding: 9px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--dark);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .tab-btn.active {
+      color: #059669;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 6px 14px 6px 6px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #059669;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .user-info {
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px;
+      flex: 1;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    .page-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* Metric Cards Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .metric-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .metric-val {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .metric-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    /* Modern Table Container */
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .card-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .search-input {
+      padding: 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      width: 320px;
+      outline: none;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: #10b981;
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 14px 28px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 18px 28px;
+      font-size: 14px;
+      color: #334155;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #059669;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: #047857;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: #334155;
+    }
+
+    .btn-outline:hover {
+      background: #f1f5f9;
+    }
+
+    /* POS Specific Layout */
+    .pos-layout {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 28px;
+    }
+
+    .cart-container {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .cart-calc {
+      border-top: 2px solid #f1f5f9;
+      padding-top: 18px;
+    }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .calc-row.final {
+      font-size: 22px;
+      font-weight: 800;
+      color: #059669;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Window Switcher Management */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP MODERN FLOATING NAVIGATION HEADER -->
+  <header class="top-header">
+    <div class="header-content">
+      <div class="brand-section">
+        <div class="brand-logo">💊</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="brand-title">PharmaCare Pro</span>
+            <span class="brand-badge">Enterprise v2.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER NAV PILLS -->
+      <nav>
+        <ul class="nav-tabs">
+          <li><button class="tab-btn active" id="tab-dashboard" onclick="switchTab('dashboard')"><span>📊</span> Analytics Dashboard</button></li>
+          <li><button class="tab-btn" id="tab-inventory" onclick="switchTab('inventory')"><span>📦</span> Medicine Inventory</button></li>
+          <li><button class="tab-btn" id="tab-pos" onclick="switchTab('pos')"><span>🧾</span> POS & Billing</button></li>
+          <li><button class="tab-btn" id="tab-alerts" onclick="switchTab('alerts')"><span>⚠️</span> Safety & Expiry</button></li>
+          <li><button class="tab-btn" id="tab-staff" onclick="switchTab('staff')"><span>👥</span> Pharmacy Staff</button></li>
+        </ul>
+      </nav>
+
+      <!-- USER PROFILE -->
+      <div class="user-profile">
+        <div class="user-avatar">N</div>
+        <div class="user-info">
+          <div class="user-name">Dr. Nour</div>
+          <div class="user-role">Lead Administrator</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW CONTENT AREA -->
+  <main class="main-container">
+
+    <!-- 1. DASHBOARD WINDOW -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Executive Dashboard</h1>
+          <p class="page-desc">Real-time overview of pharmacy sales, dispensing, and inventory health.</p>
+        </div>
+        <button class="btn btn-primary" onclick="switchTab('pos')">+ New Sale Transaction</button>
+      </div>
+
+      <!-- 4 METRIC CARDS -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Today's Revenue</div>
+            <div class="metric-val">$4,850.00</div>
+            <div class="metric-sub" style="color: #059669;">↑ +18.4% compared to yesterday</div>
+          </div>
+          <div class="metric-icon" style="background: #ecfdf5; color: #059669;">💵</div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Active Medicine Catalog</div>
+            <div class="metric-val">128 Brands</div>
+            <div class="metric-sub" style="color: #0284c7;">Across 6 Clinical Categories</div>
+          </div>
+          <div class="metric-icon" style="background: #f0f9ff; color: #0284c7;">💊</div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Low Stock Warning</div>
+            <div class="metric-val" style="color: #d97706;">2 Items</div>
+            <div class="metric-sub" style="color: #b45309;">Immediate re-order required</div>
+          </div>
+          <div class="metric-icon" style="background: #fffbeb; color: #d97706;">⚠️</div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Expiring Batches (30d)</div>
+            <div class="metric-val" style="color: #dc2626;">2 Batches</div>
+            <div class="metric-sub" style="color: #b91c1c;">Vendor return open</div>
+          </div>
+          <div class="metric-icon" style="background: #fef2f2; color: #dc2626;">⏳</div>
+        </div>
+      </div>
+
+      <!-- RECENT SALES TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Recent Transactions & Invoices</h2>
+          <span class="badge badge-info">Real-time Feed</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Customer Name</th>
+              <th>Items Dispensed</th>
+              <th>Total Amount</th>
+              <th>Payment Method</th>
+              <th>Pharmacist / Cashier</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color: #0284c7;">INV-20261014-9841</strong></td>
+              <td><strong>Mohamed Ali</strong></td>
+              <td>Panadol Extra (x2), Vitamin C 1000mg (x1)</td>
+              <td><strong style="color: #059669;">$126.00</strong></td>
+              <td><span class="badge badge-info">CASH</span></td>
+              <td>Sara Mahmoud</td>
+              <td><span class="badge badge-success">Completed</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color: #0284c7;">INV-20261014-9840</strong></td>
+              <td><strong>Dr. Hany Mostafa</strong></td>
+              <td>Augmentin 1000mg (x1)</td>
+              <td><strong style="color: #059669;">$110.00</strong></td>
+              <td><span class="badge badge-info">VISA</span></td>
+              <td>Ahmed El-Sayed</td>
+              <td><span class="badge badge-success">Completed</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color: #0284c7;">INV-20261014-9839</strong></td>
+              <td><strong>Sarah Tamer</strong></td>
+              <td>Concor 5mg (x2), Cataflam 50mg (x1)</td>
+              <td><strong style="color: #059669;">$149.50</strong></td>
+              <td><span class="badge badge-info">CASH</span></td>
+              <td>Sara Mahmoud</td>
+              <td><span class="badge badge-success">Completed</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color: #0284c7;">INV-20261014-9838</strong></td>
+              <td><strong>Omar Khaled</strong></td>
+              <td>Nexium 40mg Gastro-Resistant (x1)</td>
+              <td><strong style="color: #059669;">$148.00</strong></td>
+              <td><span class="badge badge-info">VISA</span></td>
+              <td>Ahmed El-Sayed</td>
+              <td><span class="badge badge-success">Completed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. INVENTORY WINDOW -->
+    <section id="view-inventory" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Pharmaceutical Inventory</h1>
+          <p class="page-desc">Manage medication stock, batch details, pricing, and supplier tracking.</p>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Opening Add Drug Dialog')">+ Add New Medicine</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <input type="text" class="search-input" placeholder="🔍 Quick search brand name or scientific formula...">
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline">Export CSV</button>
+            <button class="btn btn-outline">Stock Audit</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Trade Brand Name</th>
+              <th>Active Formula</th>
+              <th>Therapeutic Class</th>
+              <th>Batch Number</th>
+              <th>Purchase Price</th>
+              <th>Selling Price</th>
+              <th>Current Stock</th>
+              <th>Expiry Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="font-size: 15px;">Panadol Extra 500mg</strong></td>
+              <td>Paracetamol + Caffeine</td>
+              <td><span class="badge badge-info">Analgesics</span></td>
+              <td><code>BAT-2024-001</code></td>
+              <td>$35.00</td>
+              <td><strong>$45.00</strong></td>
+              <td><strong style="color: #059669;">140 units</strong></td>
+              <td>2027-10-31</td>
+              <td><span class="badge badge-success">In Stock</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Augmentin 1000mg</strong></td>
+              <td>Amoxicillin + Clavulanate</td>
+              <td><span class="badge badge-info">Antibiotics</span></td>
+              <td><code>BAT-2024-002</code></td>
+              <td>$85.00</td>
+              <td><strong>$110.00</strong></td>
+              <td><strong style="color: #059669;">45 units</strong></td>
+              <td>2026-12-31</td>
+              <td><span class="badge badge-success">In Stock</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Vitamin C 1000mg</strong></td>
+              <td>Ascorbic Acid Effervescent</td>
+              <td><span class="badge badge-info">Vitamins</span></td>
+              <td><code>BAT-2024-003</code></td>
+              <td>$25.00</td>
+              <td><strong>$36.00</strong></td>
+              <td><strong style="color: #d97706;">8 units</strong></td>
+              <td>2026-11-20</td>
+              <td><span class="badge badge-warning">Low Stock</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Concor 5mg Tablets</strong></td>
+              <td>Bisoprolol Fumarate</td>
+              <td><span class="badge badge-info">Cardiology</span></td>
+              <td><code>BAT-2024-004</code></td>
+              <td>$42.00</td>
+              <td><strong>$55.00</strong></td>
+              <td><strong style="color: #059669;">75 units</strong></td>
+              <td>2026-10-25</td>
+              <td><span class="badge badge-danger">Expiring Soon (11d)</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Cataflam 50mg</strong></td>
+              <td>Diclofenac Potassium</td>
+              <td><span class="badge badge-info">Analgesics</span></td>
+              <td><code>BAT-2024-005</code></td>
+              <td>$28.00</td>
+              <td><strong>$39.50</strong></td>
+              <td><strong style="color: #d97706;">5 units</strong></td>
+              <td>2027-04-15</td>
+              <td><span class="badge badge-warning">Low Stock</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Nexium 40mg Gastro</strong></td>
+              <td>Esomeprazole Magnesium</td>
+              <td><span class="badge badge-info">Digestive</span></td>
+              <td><code>BAT-2024-006</code></td>
+              <td>$120.00</td>
+              <td><strong>$148.00</strong></td>
+              <td><strong style="color: #059669;">32 units</strong></td>
+              <td>2027-08-10</td>
+              <td><span class="badge badge-success">In Stock</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. POS & INVOICING WINDOW -->
+    <section id="view-pos" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Point of Sale (POS) Billing</h1>
+          <p class="page-desc">Instant barcode scanning, cart calculation, stock deduction, and receipt printing.</p>
+        </div>
+      </div>
+
+      <div class="pos-layout">
+        <!-- Products Picker -->
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-header">
+            <input type="text" class="search-input" style="width: 100%;" placeholder="🔍 Scan barcode or type medicine name to add to cart...">
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Medication</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Panadol Extra 500mg</strong></td>
+                <td>Analgesics</td>
+                <td><strong style="color: #059669;">$45.00</strong></td>
+                <td>140 pcs</td>
+                <td><button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">+ Add Item</button></td>
+              </tr>
+              <tr>
+                <td><strong>Augmentin 1000mg</strong></td>
+                <td>Antibiotics</td>
+                <td><strong style="color: #059669;">$110.00</strong></td>
+                <td>45 pcs</td>
+                <td><button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">+ Add Item</button></td>
+              </tr>
+              <tr>
+                <td><strong>Vitamin C 1000mg</strong></td>
+                <td>Vitamins</td>
+                <td><strong style="color: #059669;">$36.00</strong></td>
+                <td>8 pcs</td>
+                <td><button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">+ Add Item</button></td>
+              </tr>
+              <tr>
+                <td><strong>Nexium 40mg Gastro</strong></td>
+                <td>Digestive</td>
+                <td><strong style="color: #059669;">$148.00</strong></td>
+                <td>32 pcs</td>
+                <td><button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">+ Add Item</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Checkout Cart -->
+        <div class="cart-container">
+          <div class="cart-header">
+            <h2 style="font-size: 18px; font-weight: 800;">Active Invoice</h2>
+            <span class="badge badge-info" style="font-size: 13px;">INV-20261014-9842</span>
+          </div>
+          <div style="margin: 14px 0;">
+            <input type="text" class="search-input" style="width: 100%;" value="Walk-in Customer">
+          </div>
+          <div class="cart-list">
+            <div class="cart-item">
+              <div>
+                <strong>Panadol Extra 500mg</strong><br>
+                <small style="color: var(--text-muted);">$45.00 × 2 units</small>
+              </div>
+              <strong style="font-size: 15px;">$90.00</strong>
+            </div>
+            <div class="cart-item">
+              <div>
+                <strong>Vitamin C 1000mg</strong><br>
+                <small style="color: var(--text-muted);">$36.00 × 1 unit</small>
+              </div>
+              <strong style="font-size: 15px;">$36.00</strong>
+            </div>
+          </div>
+          <div class="cart-calc">
+            <div class="calc-row">
+              <span>Subtotal:</span>
+              <strong>$126.00</strong>
+            </div>
+            <div class="calc-row">
+              <span>Tax / VAT (0%):</span>
+              <strong>$0.00</strong>
+            </div>
+            <div class="calc-row">
+              <span>Special Discount:</span>
+              <span style="color: #dc2626;">-$0.00</span>
+            </div>
+            <div class="calc-row final">
+              <span>Net Payable:</span>
+              <span>$126.00</span>
+            </div>
+            <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 16px; padding: 14px; font-size: 15px;">
+              💳 Pay Now & Issue Receipt
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SAFETY & EXPIRY ALERTS WINDOW -->
+    <section id="view-alerts" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Safety, Expiry & Inventory Alerts</h1>
+          <p class="page-desc">Automated clinical surveillance preventing dispensing expired or depleted drugs.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+        <div class="card">
+          <div class="card-header" style="background: #fef2f2; border-bottom: 2px solid #ef4444;">
+            <h2 class="card-title" style="color: #b91c1c;">⏳ Expiry Date Warning Center (Next 30 Days)</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Drug Brand</th>
+                <th>Batch Number</th>
+                <th>Expiry Date</th>
+                <th>Clinical Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Concor 5mg Tablets</strong></td>
+                <td><code>BAT-2024-004</code></td>
+                <td><strong style="color: #dc2626;">2026-10-25 (11 Days)</strong></td>
+                <td><span class="badge badge-danger">Immediate Vendor Return</span></td>
+              </tr>
+              <tr>
+                <td><strong>Vitamin C 1000mg</strong></td>
+                <td><code>BAT-2024-003</code></td>
+                <td><strong style="color: #d97706;">2026-11-20 (37 Days)</strong></td>
+                <td><span class="badge badge-warning">Apply 20% Fast Sale</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header" style="background: #fffbeb; border-bottom: 2px solid #f59e0b;">
+            <h2 class="card-title" style="color: #b45309;">⚠️ Critical Stock Depletion Alerts</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Drug Brand</th>
+                <th>Remaining Stock</th>
+                <th>Safety Buffer</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Cataflam 50mg</strong></td>
+                <td><strong style="color: #dc2626; font-size: 15px;">5 units</strong></td>
+                <td>12 units</td>
+                <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">+ Reorder 50</button></td>
+              </tr>
+              <tr>
+                <td><strong>Vitamin C 1000mg</strong></td>
+                <td><strong style="color: #d97706; font-size: 15px;">8 units</strong></td>
+                <td>15 units</td>
+                <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">+ Reorder 100</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. STAFF WINDOW -->
+    <section id="view-staff" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Pharmacy Personnel & Role-Based Access</h1>
+          <p class="page-desc">Licensed staff members, access credentials, and operational responsibilities.</p>
+        </div>
+        <button class="btn btn-primary">+ Register Staff Member</button>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Staff Name</th>
+              <th>System Role</th>
+              <th>Official Email</th>
+              <th>Phone Number</th>
+              <th>Assigned Permissions</th>
+              <th>Account Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="font-size: 15px;">Dr. Nour</strong></td>
+              <td><span class="badge badge-success">HEAD ADMINISTRATOR</span></td>
+              <td>nour@pharmacy.com</td>
+              <td>01012345678</td>
+              <td>Full Master Control & Analytics</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Ahmed El-Sayed</strong></td>
+              <td><span class="badge badge-info">LICENSED PHARMACIST</span></td>
+              <td>ahmed@pharmacy.com</td>
+              <td>01123456789</td>
+              <td>Dispensing & Stock Management</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+            <tr>
+              <td><strong style="font-size: 15px;">Sara Mahmoud</strong></td>
+              <td><span class="badge badge-warning">CHIEF CASHIER</span></td>
+              <td>sara@pharmacy.com</td>
+              <td>01234567890</td>
+              <td>POS Invoicing & Cash Register</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function switchTab(viewName) {
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById('view-' + viewName).classList.add('active');
+      document.getElementById('tab-' + viewName).classList.add('active');
+    }
+  </script>
+</body>
+</html>

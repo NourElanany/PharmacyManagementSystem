@@ -1,4 +1,4 @@
-# 🏥 Pharmacy Management System (REST API)
+# 🏥 PharmaCare Pro • Pharmacy Management System (Full-Stack)
 
 [![Java](https://img.shields.io/badge/Java-17%20%7C%2021-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
@@ -7,56 +7,69 @@
 [![Swagger](https://img.shields.io/badge/OpenAPI-Swagger%203-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
 [![JUnit 5](https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/junit5/)
 
-An enterprise-grade, production-ready **Pharmacy Management System Backend** built with **Java** and **Spring Boot 3**. It features robust drug inventory control, automated stock alerts, expiry date tracking, and a transactional Point-of-Sale (POS) invoicing engine.
+An enterprise-grade, production-ready **Pharmacy Management System** featuring a complete **Spring Boot 3 Backend** and a clean, responsive **Medical Web Client (Embedded UI)**. The system provides real-time drug tracking, early-warning expiry radars, inventory replenishment alerts, and an atomic Point-of-Sale (POS) invoicing engine.
 
 ---
 
-## 🏗️ Architectural Overview (3-Tier Layered Architecture)
+## 📸 Screenshots & System Walkthrough
 
-The system strictly adheres to Clean Architecture and Separation of Concerns:
+### 1. 📊 Executive Analytics Dashboard
+Provides live metrics on daily revenue, registered drug catalogs, critical stock alerts, and real-time transaction streaming.
+![Executive Dashboard](screenshots/01_executive_dashboard_clean.png)
+
+---
+
+### 2. 📦 Pharmaceutical Inventory Management
+Comprehensive data table displaying trade names, generic chemical formulas, batch numbers, purchase/selling pricing, and live stock statuses.
+![Pharmaceutical Inventory](screenshots/02_pharmaceutical_inventory_clean.png)
+
+---
+
+### 3. 🧾 Express Point of Sale (POS) & Billing
+Quick barcode scanning, automated cart calculation, expired medication safety locks, stock deduction, and instant invoice issuance.
+![POS & Billing](screenshots/03_pos_billing_clean.png)
+
+---
+
+### 4. ⚠️ Clinical Safety, Expiry & Low Stock Alerts
+Surveillance radar categorizing medicines expiring within 30 days and alerting when quantities reach or fall below buffer thresholds.
+![Safety & Expiry Alerts](screenshots/04_safety_expiry_alerts_clean.png)
+
+---
+
+### 5. 👥 Pharmacy Staff & Role Control
+Manage staff credentials, assigned operational roles (`ADMIN`, `PHARMACIST`, `CASHIER`), and system permissions.
+![Staff Management](screenshots/05_staff_roles_clean.png)
+
+---
+
+## 🏗️ Clean 3-Tier Layered Architecture
 
 ```mermaid
 flowchart TD
-    Client["Client / Frontend / Postman / Swagger"] --> ControllerLayer["Controllers (REST API Layer)"]
-    ControllerLayer --> ServiceLayer["Services (Business & Transactional Logic)"]
-    ServiceLayer --> RepoLayer["Repositories (Spring Data JPA)"]
+    Client["Client Browser / POS Terminal"] --> StaticUI["Embedded Web Client (Spring Static Resources)"]
+    StaticUI --> ControllerLayer["REST API Layer (@RestController)"]
+    ControllerLayer --> ServiceLayer["Service & Transactional Layer (@Transactional)"]
+    ServiceLayer --> RepoLayer["Data Access Layer (Spring Data JPA)"]
     RepoLayer --> Database[("Database: H2 (Dev) / MySQL (Prod)")]
 
-    subgraph DTOs & Validation
+    subgraph DTOs & Safety Validation
         Req["Request DTOs (@Valid)"]
         Resp["Response DTOs"]
     end
 
-    ControllerLayer -.-> DTOs & Validation
+    ControllerLayer -.-> DTOs & Safety Validation
 ```
 
 ---
 
-## ✨ Key Features
+## ✨ Core Business Features
 
-1. **📦 Smart Inventory & Drug Tracking:**
-   - Manage trade names, scientific generic names, batch numbers, barcodes, categories, and pricing.
-   - Real-time stock status calculations (`isLowStock()`, `isExpired()`).
-
-2. **⚠️ Automated Early-Warning Alerts:**
-   - **Low Stock Alert:** Identifies medications whose quantity has reached or fallen below safety thresholds.
-   - **Expiry Tracking:** Filter expired medications and anticipate medications expiring within a configurable window (e.g., 30 days).
-
-3. **🧾 Point-of-Sale (POS) & Invoicing Engine:**
-   - Generates unique invoice numbers (e.g., `INV-20261014-A1B2`).
-   - Automatically checks available stock and prevents transaction completion if inventory is insufficient.
-   - **Safety Enforcement:** Strict business rule blocking sales of expired pharmaceuticals.
-   - Atomically updates inventory upon successful checkout (`@Transactional`).
-
-4. **👥 Role-Based Staff Management:**
-   - Supports explicit operational roles: `ADMIN`, `PHARMACIST`, `CASHIER`, `MANAGER`.
-   - Toggle account active status without losing transaction history.
-
-5. **🛡️ Global Exception Handling & Uniform API Responses:**
-   - Centralized `@RestControllerAdvice` translates domain exceptions into standard, structured JSON error payloads with precise validation field feedback.
-
-6. **📄 Interactive API Documentation:**
-   - Integrated OpenAPI (Swagger UI) allows real-time endpoint testing directly from the browser.
+1. **🔒 Safety Enforcement:** Strict transactional verification (`@Transactional`) that completely blocks dispensing expired pharmaceuticals.
+2. **📦 Inventory Tracking:** Batch control, purchase/selling margins, barcode indexing, and automatic stock deduction.
+3. **⚠️ Early-Warning Alerts:** Dynamic queries identifying drugs expiring soon and items nearing stockout.
+4. **👥 Multi-Role Authorization:** Dedicated operational workflows for Head Administrators, Licensed Pharmacists, and Cashiers.
+5. **📑 Interactive OpenAPI Documentation:** Built-in Swagger UI for real-time endpoint testing.
 
 ---
 
@@ -67,11 +80,11 @@ flowchart TD
 | :--- | :--- | :--- |
 | `GET` | `/api/medicines` | Retrieve all medicines |
 | `GET` | `/api/medicines/{id}` | Get medicine by ID |
-| `GET` | `/api/medicines/search?query=...` | Search by trade name or generic scientific name |
+| `GET` | `/api/medicines/search?query=...` | Search by trade name or generic formula |
 | `GET` | `/api/medicines/alerts/low-stock` | Retrieve all low-stock medicines |
 | `GET` | `/api/medicines/alerts/expired` | Retrieve all expired medications |
 | `GET` | `/api/medicines/alerts/expiring-soon?days=30` | Retrieve drugs expiring within N days |
-| `POST` | `/api/medicines` | Create a new medicine record |
+| `POST` | `/api/medicines` | Register a new medicine record |
 | `PUT` | `/api/medicines/{id}` | Update existing medicine details |
 | `DELETE` | `/api/medicines/{id}` | Remove a medicine record |
 
@@ -83,66 +96,35 @@ flowchart TD
 | `GET` | `/api/sales/invoice/{invoiceNo}` | Lookup receipt by invoice number |
 | `POST` | `/api/sales` | Process a sale, deduct inventory, and issue an invoice |
 
-### 🏷️ Categories (`/api/categories`)
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/categories` | List all medicine categories |
-| `POST` | `/api/categories` | Create a new category |
-| `PUT` | `/api/categories/{id}` | Update a category |
-| `DELETE` | `/api/categories/{id}` | Delete a category |
-
-### 👤 Users & Staff (`/api/users`)
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/users` | List all staff members |
-| `GET` | `/api/users/role/{role}` | Filter staff by role (`ADMIN`, `PHARMACIST`, etc.) |
-| `POST` | `/api/users` | Register a new user |
-| `PATCH` | `/api/users/{id}/toggle-active` | Activate or deactivate account |
-
 ---
 
-## 🚀 Getting Started
+## 🚀 Running the Project
 
-### Prerequisites
-- **JDK 17 or 21** installed.
-- (Optional) **MySQL 8.0** if running in production mode.
-
-### 1. Zero-Setup Run (In-Memory Database)
-By default, the application runs with an in-memory **H2 Database** seeded with sample categories, medicines, and staff:
+### Zero-Setup Mode (Integrated UI + In-Memory Database)
+Run the application with Maven:
 ```bash
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
-*(On Windows Command Prompt or PowerShell: `mvn spring-boot:run`)*
+Then navigate directly in your browser:
+* **Pharmacy UI Suite:** [http://localhost:8080/](http://localhost:8080/)
+* **Interactive Swagger UI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+* **H2 Database Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
-### 2. Running with MySQL
-Create a database named `pharmacy_db` in your MySQL server:
-```sql
-CREATE DATABASE pharmacy_db;
-```
-Then run with the `mysql` profile activated:
+### Running with MySQL
+Create a database named `pharmacy_db` and activate the `mysql` profile:
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
+mvn spring-boot:run -Dspring-boot.run.profiles=mysql
 ```
-
----
-
-## 📖 Swagger Documentation & Testing
-
-Once the application is running:
-- **Swagger UI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **OpenAPI JSON Docs:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
-- **H2 Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:mem:pharmacydb`, Username: `sa`, Password: empty)
 
 ---
 
 ## 🧪 Automated Testing
-
-Run the automated JUnit 5 and Mockito test suite:
+Run the comprehensive JUnit 5 and Mockito test suite:
 ```bash
-./mvnw test
+mvn test
 ```
 
 ---
 
 ## 👨‍💻 Author
-**Nour** - Software Engineer & AI Specialist.
+**Dr. Nour** - Software Engineer & AI Specialist.
